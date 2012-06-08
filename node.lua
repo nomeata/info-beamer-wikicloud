@@ -2,6 +2,9 @@ gl.setup(1024, 768)
 
 font = resource.load_font("DejaVuSans.ttf")
 
+headersize = 60
+headerspace = 70
+
 words = {}
 
 padding = 5
@@ -36,9 +39,9 @@ node.event("content_update", function(filename)
 
     calcDim(tree, 1)
 
-    scale = math.min(WIDTH/tree['width'], HEIGHT/tree['height'])
+    scale = math.min(WIDTH/tree['width'], (HEIGHT-headerspace)/tree['height'])
 
-    layout(tree, 0, 0, WIDTH/scale, HEIGHT/scale)
+    layout(tree, 0, 0, WIDTH/scale, (HEIGHT-headerspace)/scale)
 
     -- Now we could forget the tree and shuffle stuff around
 
@@ -197,6 +200,9 @@ function forAllWords(tree, f)
 end
 
 function node.render()
+    local width = font:write(1000,1000,"Die GPN-12-Wiki-Hit-Cloud", headersize, 1, 1, 1)
+    font:write((WIDTH-width)/2, 0, "Die GPN-12-Wiki-Hit-Cloud", headersize, 1, 1, 1)
+    
     for n, entry in ipairs(words) do
     --forAllWords(tree, function(entry) 
 	local f = 1 + (math.sin(entry['x']+sys.now()) + math.sin(entry['y']+sys.now()))*0.05
@@ -215,7 +221,7 @@ function node.render()
 	end
         font:write(
 	    x * scale,
-	    y * scale,
+	    y * scale + headerspace,
 	    entry['name'],
 	    entry['size'] * scale * f,
 	    r,g,b)
@@ -245,7 +251,7 @@ end
 
 function randomPos(e) 
     e['x'] = math.random(0, WIDTH - e['width']) ;
-    e['y'] = math.random(0, HEIGHT - e['height']) ;
+    e['y'] = math.random(0, HEIGHT - e['height'] - headerspace) ;
 end
 
 
