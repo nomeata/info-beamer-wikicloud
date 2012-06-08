@@ -9,6 +9,8 @@ words = {}
 
 padding = 5
 
+horizByDepth = {false, true, true, true, false, true, false, false}
+
 node.event("content_update", function(filename) 
     local str = resource.load_file("text")
     local n = 1
@@ -102,7 +104,7 @@ function calcDim(tree, depth)
         local hv = math.max(tree['left']['height'], tree['right']['height'])
 
 
-        local horiz = depth % 3 > 0
+        local horiz = horizByDepth[depth]
         --[[
         rdh = math.abs((WIDTH/HEIGHT)/(wh/hh) - 1)
         rdv = math.abs((WIDTH/HEIGHT)/(wv/hv) - 1)
