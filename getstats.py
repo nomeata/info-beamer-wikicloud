@@ -13,15 +13,18 @@ p2 = re.compile(r'(\d+) \d+ (.*)')
 
 txt = codecs.open('text.tmp',encoding='utf8',mode='w')
 
-old = codecs.open('text',encoding='utf8',mode='r')
-
 oldCount = {}
-for line in old:
-    match = p2.match(line)
-    if match:
-        oldCount[match.group(2)] = int(match.group(1))
-    else:
-        print("Warning: Could not parse old data line %s" % line)
+try:
+    old = codecs.open('text',encoding='utf8',mode='r')
+
+    for line in old:
+        match = p2.match(line)
+        if match:
+            oldCount[match.group(2)] = int(match.group(1))
+        else:
+            print("Warning: Could not parse old data line %s" % line)
+except IOError:
+   pass 
 
 
 seen = set()
