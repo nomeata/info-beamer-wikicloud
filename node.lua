@@ -212,8 +212,8 @@ function node.render()
 	local r, g, b
 	if entry['oldcount'] < entry['count'] then
 	    r = 1
-	    b = 0
-	    g = 0
+	    b = 0.5
+	    g = 0.5
 	else
 	    r = 1
 	    b = 1
