@@ -11,10 +11,11 @@ node.event("content_update", function(filename)
     local n = 1
     local words = {}
     for line in str:gmatch("[^\r\n]+") do
-        count, name = line:match("([0-9]+) (.*)")
+        count, oldcount, name = line:match("([0-9]+) ([0-9]+) (.*)")
         size = math.pow(count,0.4)*10
         words[n] = { name = name ;
-            count = count ;
+            count = count;
+	    oldcount = oldcount;
 	    size = size;
             height = size + 2 * padding;
             width = font:write(10000, 10000, name, size, 1, 1, 1, 1) + 2 * padding
@@ -167,9 +168,26 @@ end
 
 function node.render()
     forAllWords(tree, function(entry) 
-	x = entry['x'] + padding + (entry['width_alloc'] - entry['width'])/2
-	y = entry['y'] + padding + (entry['height_alloc'] - entry['height'])/2
-        font:write(x * scale, y * scale, entry['name'], entry['size'] * scale, 1,1,1,1)
+	local f = 1 + (math.sin(entry['x']+sys.now()) + math.sin(entry['y']+sys.now()))*0.05
+	local x = entry['x'] + padding + (entry['width_alloc'] - entry['width'] * f)/2
+	local y = entry['y'] + padding + (entry['height_alloc'] - entry['height'] * f)/2
+
+	local r, g, b
+	if entry['oldcount'] < entry['count'] then
+	    r = 1
+	    b = 0
+	    g = 0
+	else
+	    r = 1
+	    b = 1
+	    g = 1
+	end
+        font:write(
+	    x * scale,
+	    y * scale,
+	    entry['name'],
+	    entry['size'] * scale * f,
+	    r,g,b)
     end)
 end
 
