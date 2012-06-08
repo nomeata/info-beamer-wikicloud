@@ -9,7 +9,7 @@ words = {}
 
 padding = 5
 
-horizByDepth = {false, true, true, true, false, true, false, false}
+horizByDepth = {true, true, true, false, false, true, false, false}
 
 node.event("content_update", function(filename) 
     local str = resource.load_file("text")
