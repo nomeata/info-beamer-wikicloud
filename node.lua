@@ -12,7 +12,7 @@ node.event("content_update", function(filename)
     local words = {}
     for line in str:gmatch("[^\r\n]+") do
         count, name = line:match("([0-9]+) (.*)")
-        size = math.sqrt(count)*10
+        size = math.pow(count,0.4)*10
         words[n] = { name = name ;
             count = count ;
 	    size = size;
@@ -20,9 +20,9 @@ node.event("content_update", function(filename)
             width = font:write(10000, 10000, name, size, 1, 1, 1, 1) + 2 * padding
             }
         n = n + 1
-        if n > 50 then
-            break
-        end
+        --if n > 50 then
+        --    break
+        --end
     end
 
     --table.sort (words, function(entry1,entry2)
