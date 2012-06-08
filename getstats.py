@@ -17,6 +17,8 @@ for line in html.splitlines():
     if match:
         title = match.group(1)
         count = int(match.group(2))
-        txt.write("%d %s\n" % (count, title[:18]))
+        if len(title) > 16:
+            title = title[:16] + "..."
+        txt.write("%d %s\n" % (count, title))
 
 os.rename('text.tmp','text')
