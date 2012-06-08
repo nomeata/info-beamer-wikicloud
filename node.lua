@@ -2,14 +2,14 @@ gl.setup(1024, 768)
 
 font = resource.load_font("DejaVuSans.ttf")
 
-tree = {}
+words = {}
 
 padding = 5
 
 node.event("content_update", function(filename) 
     local str = resource.load_file("text")
     local n = 1
-    local words = {}
+    words = {}
     for line in str:gmatch("[^\r\n]+") do
         count, oldcount, name = line:match("([0-9]+) ([0-9]+) (.*)")
         size = math.pow(count,0.4)*10
@@ -40,6 +40,8 @@ node.event("content_update", function(filename)
 
     layout(tree, 0, 0, WIDTH/scale, HEIGHT/scale)
 
+    -- Now we could forget the tree and shuffle stuff around
+
 end)
 
 -- from http://www.gammon.com.au/forum/?id=9908
@@ -55,6 +57,34 @@ function shuffle(t)
   end
  
   return t
+end
+
+function join(horiz, dim1, dim2)
+    if horiz then
+	return {
+	    w = math.max(dim1['w'], dim2['w']);
+	    h = dim1['h'] + dim2['h']
+	}
+    else
+	return {
+	    w = dim1['w'] + dim2['w'];
+	    h = math.max(dim1['h'], dim2['h'])
+	}
+    end
+end
+
+function stockmayer(tree)
+    if tree['name'] then
+	tree['orient'] = {
+	    { w = tree['width'];
+	      h = tree['height'];
+	    }
+	}
+    else
+	
+
+    end
+
 end
 
 function calcDim(tree, depth)
@@ -167,7 +197,8 @@ function forAllWords(tree, f)
 end
 
 function node.render()
-    forAllWords(tree, function(entry) 
+    for n, entry in ipairs(words) do
+    --forAllWords(tree, function(entry) 
 	local f = 1 + (math.sin(entry['x']+sys.now()) + math.sin(entry['y']+sys.now()))*0.05
 	local x = entry['x'] + padding + (entry['width_alloc'] - entry['width'] * f)/2
 	local y = entry['y'] + padding + (entry['height_alloc'] - entry['height'] * f)/2
@@ -188,7 +219,7 @@ function node.render()
 	    entry['name'],
 	    entry['size'] * scale * f,
 	    r,g,b)
-    end)
+    end
 end
 
 
