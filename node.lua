@@ -37,7 +37,7 @@ node.event("content_update", function(filename)
 
     shuffle(words)
 
-    tree = toTree(words)
+    tree = toTree(words,1)
 
     calcDim(tree, 1)
 
@@ -162,26 +162,34 @@ function layout(tree, x, y, w, h)
     end
 end
 
-function toTree(words)
+function toTree(words,depth)
     local left = {}
-    local left_area = 0
+    local left_cost = 0
     local right = {}
-    local right_area = 0
+    local right_cost = 0
+
+    local horiz = horizByDepth[depth]
+    local what
+    if horiz then
+	what = 'width'
+    else
+	what = 'height'
+    end
 
     if (#words > 1) then
 	for n, entry in ipairs(words) do
-	    if left_area <= right_area then
+	    if left_cost <= right_cost then
 		table.insert(left, entry)
-		left_area = left_area + area(entry)
+		left_cost = left_cost + entry[what]
 	    else
 		table.insert(right, entry)
-		right_area = right_area + area(entry)
+		right_cost = right_cost + entry[what]
 	    end
 	end
 
 	local tree = {
-	    left = toTree(left);
-	    right = toTree(right);
+	    left = toTree(left,depth + 1);
+	    right = toTree(right,depth + 1);
 	}
         return tree
 
