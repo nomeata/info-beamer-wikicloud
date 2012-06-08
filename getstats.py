@@ -5,6 +5,8 @@ import re
 import codecs
 import os
 
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
 response = urllib2.urlopen('https://entropia.de/wiki/index.php?title=Spezial:Beliebteste_Seiten&limit=2000&offset=0')
 html = unicode(response.read(), 'utf8')
 
