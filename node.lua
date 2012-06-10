@@ -11,8 +11,6 @@ words = {}
 
 padding = 5
 
-horizByDepth = {true, true, true, false, false, true, false, false}
-
 node.event("content_update", function(filename) 
     local str = resource.load_file("text")
     local n = 1
@@ -37,18 +35,9 @@ node.event("content_update", function(filename)
     --    return entry1['count'] > entry2['count']
     --end)
 
-    shuffle(words)
+    local horizByDepth = {true, true, true, false, false, true, false, false}
 
-    tree = toTree(words,1)
-
-    calcDim(tree, 1)
-
-    scale = math.min(WIDTH/tree['width'], (HEIGHT-headerspace)/tree['height'])
-
-    layout(tree, 0, 0, WIDTH/scale, (HEIGHT-headerspace)/scale)
-
-    -- Now we could forget the tree and shuffle stuff around
-
+    scale = wordCloud(words, WIDTH, HEIGHT - headerspace, horizByDepth)
 end)
 
 function node.render()
@@ -56,7 +45,6 @@ function node.render()
     font:write((WIDTH-width)/2, 0, "Die GPN-12-Wiki-Hit-Cloud", headersize, 1, 1, 1)
     
     for n, entry in ipairs(words) do
-    --forAllWords(tree, function(entry) 
 	local f = 1 + (math.sin(entry['x']+sys.now()) + math.sin(entry['y']+sys.now()))*0.05
 	local x = entry['x'] + padding + (entry['width_alloc'] - entry['width'] * f)/2
 	local y = entry['y'] + padding + (entry['height_alloc'] - entry['height'] * f)/2
